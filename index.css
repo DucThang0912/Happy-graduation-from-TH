@@ -1,0 +1,426 @@
+:root {
+    --primary-color: #6a11cb;
+    --secondary-color: #2575fc;
+    --background-color: #f0f2f5;
+    --card-background: #ffffff;
+    --text-color: #333;
+    --light-text-color: #666;
+    --button-text-color: #fff;
+    --border-color: #e0e0e0;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --font-family: 'Be Vietnam Pro', sans-serif;
+    --gift-color: #FADADD; /* Pastel Pink */
+    --ribbon-color: #F9E076; /* Creamy Gold */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-family);
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #fde7f0, #e6d4e1); /* Soft Pink Gradient */
+    color: var(--text-color);
+    padding: 1rem;
+    overflow: hidden;
+    transition: background 0.7s ease-in-out;
+}
+
+body.gift-screen-active {
+    background: radial-gradient(circle, #4a2d3e 0%, #2c1a24 100%); /* Dark, moody magenta */
+}
+
+#three-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+main {
+    max-width: 400px;
+    width: 100%;
+    display: grid;
+    grid-template-areas: "stack"; /* All children will be in the same cell */
+    transition: max-width 0.6s ease-out; /* Smooth transition for size change */
+    position: relative;
+    z-index: 1;
+}
+
+/* Expand the main container for the two-column invitation layout */
+body.reveal-screen-active main {
+    max-width: 1000px;
+}
+
+.container {
+    grid-area: stack;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    /* Removed transition to prevent conflict with GSAP */
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Center the form container vertically on the initial screen */
+#form-container {
+    justify-content: center;
+    min-height: 90vh;
+}
+
+.card {
+    background: var(--card-background);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden; /* For decorative elements */
+    z-index: 1;
+}
+
+/* Decoration for the form card */
+#form-container .card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        transparent,
+        rgba(37, 117, 252, 0.2),
+        transparent 30%
+    );
+    animation: rotate 10s linear infinite;
+    z-index: -2;
+}
+#form-container .card::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    background: var(--card-background);
+    border-radius: 11px; /* inner radius */
+    z-index: -1;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(1turn);
+    }
+}
+
+.card h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.card p {
+    color: var(--light-text-color);
+    margin-bottom: 1.5rem;
+}
+
+#wish-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: left;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+#name, #wish {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fdfdfd;
+    color: var(--text-color); /* Ensure text is readable */
+}
+
+#name:focus, #wish:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 4px rgba(37, 117, 252, 0.25);
+}
+
+#wish {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.button {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    color: var(--button-text-color);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.button:active {
+    transform: translateY(0);
+}
+
+#gift-container {
+    display: grid;
+    place-items: center;
+    height: 70vh; /* Adjust height to center nicely in the viewport */
+}
+
+#gift-wrapper {
+    position: relative;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+#gift-wrapper:hover {
+    transform: translateY(-10px) scale(1.05);
+    filter: drop-shadow(0px 10px 20px rgba(252, 225, 236, 0.4));
+}
+
+#gift-box {
+    width: 250px; /* Increased size */
+    /* All animation and transform handled by GSAP */
+}
+
+#gift-box svg .box {
+    fill: var(--gift-color);
+}
+#gift-box svg .ribbon-v,
+#gift-box svg .ribbon-h {
+    fill: none;
+    stroke: var(--ribbon-color);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#gift-box svg .bow {
+    fill: var(--ribbon-color);
+}
+
+#gift-box svg .bow-knot {
+    fill: var(--ribbon-color);
+}
+
+#gift-box svg .bow-tail {
+    fill: none;
+    stroke: var(--ribbon-color);
+    stroke-width: 4; /* slightly thinner than main ribbon */
+    stroke-linecap: round;
+}
+
+#gift-box .lid {
+    transform-origin: center bottom;
+}
+
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkle-anim 2.5s infinite ease-in-out;
+    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #f7c5e2;
+    pointer-events: none; /* So they don't interfere with clicks */
+}
+
+.sparkle:nth-child(2) { top: -10%; left: 15%; animation-delay: 0s; }
+.sparkle:nth-child(3) { top: 75%; left: 5%; animation-delay: 0.6s; }
+.sparkle:nth-child(4) { top: 20%; left: 95%; animation-delay: 1.2s; }
+.sparkle:nth-child(5) { top: 90%; left: 80%; animation-delay: 1.8s; }
+
+@keyframes sparkle-anim {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+    }
+}
+
+/* --- Reveal Screen Styles --- */
+
+#reveal-container.container {
+    justify-content: center;
+    height: 100vh;
+    max-width: 1000px;
+    padding: 2rem 1rem;
+    gap: 2rem;
+}
+
+#invitation-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2.5rem;
+    width: 100%;
+}
+
+#invitation-image-wrapper {
+    flex: 2;
+    min-width: 250px;
+}
+
+#invitation-text-wrapper {
+    flex: 3;
+    text-align: left;
+    color: #f0e6f7;
+}
+
+#revealed-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0,0,0,0.4);
+}
+
+#revealed-wish {
+    font-size: 1.25rem;
+    color: #fceaff;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    border-left: 3px solid var(--secondary-color);
+    padding-left: 1.5rem;
+    opacity: 0.9;
+}
+
+#invitation-details .divider {
+    height: 1px;
+    border: 0;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    margin: 1.5rem 0 2rem;
+    width: 100%;
+}
+
+#invitation-details .invite-header {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+#invitation-details .event-title {
+    font-size: 1.75rem;
+    color: #fff;
+    margin-bottom: 0.25rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--secondary-color);
+}
+
+#invitation-details .event-host {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+#invitation-details .event-host strong {
+    font-weight: 700;
+    color: #fff;
+}
+
+#invitation-details .event-details {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--secondary-color);
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+#invitation-details .event-details p {
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+#invitation-details .event-details p:last-child {
+    margin-bottom: 0;
+}
+
+#invitation-details .closing-text {
+    font-weight: 500;
+    color: #fceaff;
+    font-size: 1.1rem;
+}
+
+#reset-button {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+    font-weight: 700;
+}
+#reset-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    #invitation-layout {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    #invitation-text-wrapper {
+        text-align: center;
+    }
+    #revealed-wish {
+        border-left: none;
+        padding-left: 0;
+        border-top: 3px solid var(--secondary-color);
+        padding-top: 1.5rem;
+        margin-top: 1rem;
+    }
+    #invitation-details .event-details {
+        text-align: left;
+    }
+}

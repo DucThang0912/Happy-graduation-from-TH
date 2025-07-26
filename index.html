@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lời Mời Tốt Nghiệp từ Thiên Hương</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="three-canvas"></canvas>
+    <main>
+        <section id="form-container" class="container">
+            <div class="card">
+                <h1>Gửi lời nhắn</h1>
+                <p>Thiên Hương vô cùng biết ơn vì đã tới tham dự nhé!</p>
+                <form id="wish-form">
+                    <div class="input-group">
+                        <label for="name">Tên của bạn</label>
+                        <input type="text" id="name" placeholder="Nhập tên ii bạnn" required autocomplete="name">
+                    </div>
+                    <!-- <div class="input-group">
+                        <label for="wish">Lời nhắn của bạn</label>
+                        <textarea id="wish" placeholder="Gửi đến Hương những lời từ trái tim..." required rows="3"></textarea>
+                    </div> -->
+                    <button type="submit" class="button">Gửi & Nhận Thiệp</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="gift-container" class="container hidden">
+            <div id="gift-wrapper" role="button" aria-label="Mở hộp quà">
+                <div id="gift-box">
+                    <!-- Embedded SVG for the gift box -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <g class="gift-body">
+                            <rect class="box" x="10" y="45" width="80" height="45" rx="5" ry="5"/>
+                            <rect class="ribbon-v" x="42.5" y="45" width="15" height="45"/>
+                        </g>
+                        <g class="lid">
+                            <rect class="box" x="5" y="25" width="90" height="20" rx="5" ry="5"/>
+                            <path class="ribbon-h" d="M5,35 H95"/>
+                            <g class="bow-container">
+                                <!-- The original loops, class remains "bow" -->
+                                <path class="bow" d="M 50,25 C 40,5 25,5 25,25 z"/>
+                                <path class="bow" d="M 50,25 C 60,5 75,5 75,25 z"/>
+                                <!-- Decorative trailing ribbons -->
+                                <path class="bow-tail" d="M48,25 Q40,40 43,50"/>
+                                <path class="bow-tail" d="M52,25 Q60,40 57,50"/>
+                                <!-- A more prominent knot -->
+                                <circle class="bow-knot" cx="50" cy="25" r="6"/>
+                            </g>
+                        </g>
+                    </g>
+                    </svg>
+                </div>
+                <span class="sparkle"></span>
+                <span class="sparkle"></span>
+                <span class="sparkle"></span>
+                <span class="sparkle"></span>
+            </div>
+        </section>
+
+        <section id="reveal-container" class="container hidden">
+            <div id="invitation-layout">
+                <div id="invitation-image-wrapper">
+                    <img id="revealed-image" src="" alt="Thiệp mời tốt nghiệp của Thiên Hương" />
+                </div>
+                <div id="invitation-text-wrapper">
+                    <p id="revealed-wish"></p>
+                    <div id="invitation-details">
+                        <!-- Invitation content is injected by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <button id="reset-button" class="button">Gửi lời nhắn khác</button>
+        </section>
+    </main>
+    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></canvas>
+    
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
+      }
+    }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script type="module" src="./index.js"></script>
+</body>
+</html>
