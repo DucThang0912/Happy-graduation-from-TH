@@ -35,13 +35,27 @@ const GRADUATION_IMAGES = [
     'Images/thienhuong-grad-2.jpg'
 ];
 
-const INVITATION_HTML = `
+// Invitation for Slot 1 (Morning)
+const INVITATION_HTML_SLOT_1 = `
     <div class="divider"></div>
     <p class="invite-header">Trân trọng kính mời bạn tới tham dự</p>
     <h2 class="event-title">LỄ TRAO BẰNG TỐT NGHIỆP</h2>
     <p class="event-host">của <strong>Thiên Hương</strong></p>
     <div class="event-details">
-        <p><strong>Thời gian:</strong> 10:00, Thứ Sáu, Ngày 15 tháng 08 năm 2025</p>
+        <p><strong>Thời gian:</strong> 10:30 -> 12:00, Thứ Sáu, Ngày 15 tháng 08 năm 2025</p>
+        <p><strong>Địa điểm:</strong> Đại học Văn Lang CS3 - 69/68 Đ. Đặng Thùy Trâm, Phường 13, Bình Thạnh, TPHCM</p>
+    </div>
+    <p class="closing-text">Sự hiện diện của bạn là niềm vinh hạnh và là món quà lớn nhất đối với mình!</p>
+`;
+
+// Invitation for Slot 2 (Afternoon)
+const INVITATION_HTML_SLOT_2 = `
+    <div class="divider"></div>
+    <p class="invite-header">Trân trọng kính mời bạn tới tham dự</p>
+    <h2 class="event-title">LỄ TRAO BẰNG TỐT NGHIỆP</h2>
+    <p class="event-host">của <strong>Thiên Hương</strong></p>
+    <div class="event-details">
+        <p><strong>Thời gian:</strong> 14:00 -> 15:30, Thứ Sáu, Ngày 15 tháng 08 năm 2025</p>
         <p><strong>Địa điểm:</strong> Đại học Văn Lang CS3 - 69/68 Đ. Đặng Thùy Trâm, Phường 13, Bình Thạnh, TPHCM</p>
     </div>
     <p class="closing-text">Sự hiện diện của bạn là niềm vinh hạnh và là món quà lớn nhất đối với mình!</p>
@@ -110,8 +124,20 @@ function showReveal() {
     const randomWish = getRandomItem(wishes).text;
     revealedWish.textContent = randomWish.replace('{name}', userName);
 
+    // Determine which invitation to show based on URL
+    const path = window.location.pathname;
+    let invitationHTML;
+    
+    // Check if the path ends with '/1' or '/1/'
+    // This handles URLs like .../Happy-graduation-from-TH/1
+    if (path.endsWith('/1') || path.endsWith('/1/')) {
+        invitationHTML = INVITATION_HTML_SLOT_2;
+    } else {
+        invitationHTML = INVITATION_HTML_SLOT_1;
+    }
+
     // Add the invitation details
-    invitationDetails.innerHTML = INVITATION_HTML;
+    invitationDetails.innerHTML = invitationHTML;
 
     // Show the reveal container
     giftContainer.classList.add('hidden');
