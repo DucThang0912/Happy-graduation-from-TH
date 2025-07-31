@@ -4,84 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lời Mời Tốt Nghiệp từ Thiên Hương</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Lời mời tham dự lễ tốt nghiệp của Thiên Hương - Một khoảnh khắc đáng nhớ">
+    <meta name="keywords" content="tốt nghiệp, lễ trao bằng, Thiên Hương, lời mời">
 </head>
 <body>
-    <canvas id="three-canvas"></canvas>
+    <!-- Background Canvas for 3D Effects -->
+    <canvas id="three-canvas" aria-hidden="true"></canvas>
+    
+    <!-- Floating Background Elements -->
+    <div class="floating-elements" aria-hidden="true">
+        <div class="floating-circle circle-1"></div>
+        <div class="floating-circle circle-2"></div>
+        <div class="floating-circle circle-3"></div>
+        <div class="floating-circle circle-4"></div>
+        <div class="floating-circle circle-5"></div>
+    </div>
+
     <main>
-        <section id="form-container" class="container">
-            <div class="card">
-                <h1>Gửi lời nhắn</h1>
-                <p>Thiên Hương vô cùng biết ơn vì đã tới tham dự nhé!</p>
-                <form id="wish-form">
-                    <div class="input-group">
-                        <label for="name">Tên của bạn</label>
-                        <input type="text" id="name" placeholder="Nhập tên ii bạnn" required autocomplete="name">
+        <!-- Initial Form Screen -->
+        <section id="form-container" class="container active">
+            <div class="card form-card">
+                <div class="card-header">
+                    <div class="graduation-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3L1 9L12 15L21 12.09V17H23V9L12 3ZM5 13.18V17.18C5 19.45 8.58 21 12 21S19 19.45 19 17.18V13.18L12 15.82L5 13.18Z" fill="currentColor"/>
+                        </svg>
                     </div>
-                    <!-- <div class="input-group">
-                        <label for="wish">Lời nhắn của bạn</label>
-                        <textarea id="wish" placeholder="Gửi đến Hương những lời từ trái tim..." required rows="3"></textarea>
-                    </div> -->
-                    <button type="submit" class="button">Gửi & Nhận Thiệp</button>
+                    <h1>Gửi lời nhắn</h1>
+                    <p>Thiên Hương vô cùng biết ơn vì bạn đã dành thời gian tới tham dự!</p>
+                </div>
+                
+                <form id="wish-form" class="wish-form">
+                    <div class="input-group">
+                        <label for="name">
+                            <span class="label-text">Nhập nickname ii bạn!!</span>
+                            <span class="label-icon">✨</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" id="name" placeholder="Nhập ở đây nè..." required autocomplete="name" maxlength="50">
+                            <div class="input-highlight"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="user-type">
+                            <span class="label-text">Bạn là</span>
+                            <span class="label-icon">🎓</span>
+                        </label>
+                        <div class="custom-select-wrapper">
+                            <div class="custom-select" id="custom-select">
+                                <div class="custom-select__trigger">
+                                    <span class="custom-select__placeholder">Chọn loại khách mời...</span>
+                                    <div class="custom-select__arrow">
+                                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="custom-select__options">
+                                    <span class="custom-select__option" data-value="outsider">
+                                        <span class="option-icon">👥</span>
+                                        <span class="option-text">Người ngoài</span>
+                                        <span class="option-desc">Khách mời từ bên ngoài trường</span>
+                                    </span>
+                                    <span class="custom-select__option" data-value="student">
+                                        <span class="option-icon">🎓</span>
+                                        <span class="option-text">Sinh viên trong trường</span>
+                                        <span class="option-desc">Sinh viên đang học tại trường</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <select id="user-type" required style="display: none;">
+                                <option value="">Chọn loại khách mời...</option>
+                                <option value="outsider">Người ngoài</option>
+                                <option value="student">Sinh viên trong trường</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Gửi & Nhận Thiệp</span>
+                        <span class="btn-icon">🎁</span>
+                        <div class="btn-shimmer"></div>
+                    </button>
                 </form>
             </div>
         </section>
 
-        <section id="gift-container" class="container hidden">
-            <div id="gift-wrapper" role="button" aria-label="Mở hộp quà">
-                <div id="gift-box">
-                    <!-- Embedded SVG for the gift box -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                        <g class="gift-body">
-                            <rect class="box" x="10" y="45" width="80" height="45" rx="5" ry="5"/>
-                            <rect class="ribbon-v" x="42.5" y="45" width="15" height="45"/>
-                        </g>
-                        <g class="lid">
-                            <rect class="box" x="5" y="25" width="90" height="20" rx="5" ry="5"/>
-                            <path class="ribbon-h" d="M5,35 H95"/>
-                            <g class="bow-container">
-                                <!-- The original loops, class remains "bow" -->
-                                <path class="bow" d="M 50,25 C 40,5 25,5 25,25 z"/>
-                                <path class="bow" d="M 50,25 C 60,5 75,5 75,25 z"/>
-                                <!-- Decorative trailing ribbons -->
-                                <path class="bow-tail" d="M48,25 Q40,40 43,50"/>
-                                <path class="bow-tail" d="M52,25 Q60,40 57,50"/>
-                                <!-- A more prominent knot -->
-                                <circle class="bow-knot" cx="50" cy="25" r="6"/>
+        <!-- Gift Opening Screen -->
+        <section id="gift-container" class="container">
+            <div class="gift-scene">
+                <h2 class="gift-title">Món quà đặc biệt dành cho bạn!</h2>
+                <div id="gift-wrapper" role="button" aria-label="Mở hộp quà" tabindex="0">
+                    <div id="gift-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="boxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #ff9a9e"/>
+                                    <stop offset="50%" style="stop-color: #fecfef"/>
+                                    <stop offset="100%" style="stop-color: #ffc3d4"/>
+                                </linearGradient>
+                                <linearGradient id="ribbonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color: #ffd89b"/>
+                                    <stop offset="100%" style="stop-color: #19547b"/>
+                                </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                    <feMerge> 
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            
+                            <g class="gift-body">
+                                <rect class="box" x="10" y="45" width="80" height="45" rx="5" ry="5" fill="url(#boxGradient)"/>
+                                <rect class="ribbon-v" x="42.5" y="45" width="15" height="45" fill="url(#ribbonGradient)"/>
                             </g>
-                        </g>
-                    </g>
-                    </svg>
+                            
+                            <g class="lid">
+                                <rect class="box" x="5" y="25" width="90" height="20" rx="5" ry="5" fill="url(#boxGradient)"/>
+                                <path class="ribbon-h" d="M5,35 H95" stroke="url(#ribbonGradient)" stroke-width="4"/>
+                                <g class="bow-container">
+                                    <path class="bow" d="M 50,25 C 40,5 25,5 25,25 z" fill="url(#ribbonGradient)"/>
+                                    <path class="bow" d="M 50,25 C 60,5 75,5 75,25 z" fill="url(#ribbonGradient)"/>
+                                    <path class="bow-tail" d="M48,25 Q40,40 43,50" stroke="url(#ribbonGradient)" stroke-width="3" fill="none"/>
+                                    <path class="bow-tail" d="M52,25 Q60,40 57,50" stroke="url(#ribbonGradient)" stroke-width="3" fill="none"/>
+                                    <circle class="bow-knot" cx="50" cy="25" r="6" fill="url(#ribbonGradient)" filter="url(#glow)"/>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    
+                    <!-- Enhanced Sparkles -->
+                    <div class="sparkles" aria-hidden="true">
+                        <span class="sparkle sparkle-1">✨</span>
+                        <span class="sparkle sparkle-2">⭐</span>
+                        <span class="sparkle sparkle-3">💫</span>
+                        <span class="sparkle sparkle-4">🌟</span>
+                        <span class="sparkle sparkle-5">✨</span>
+                        <span class="sparkle sparkle-6">⚡</span>
+                    </div>
                 </div>
-                <span class="sparkle"></span>
-                <span class="sparkle"></span>
-                <span class="sparkle"></span>
-                <span class="sparkle"></span>
-                <span class="sparkle"></span>
-                <span class="sparkle"></span>
+                <p class="gift-instruction">Nhấn vào hộp quà để mở!</p>
             </div>
         </section>
 
-        <section id="reveal-container" class="container hidden">
-            <div id="invitation-layout">
-                <div id="invitation-image-wrapper">
-                    <img id="revealed-image" src="" alt="Thiệp mời tốt nghiệp của Thiên Hương" />
-                </div>
-                <div id="invitation-text-wrapper">
-                    <p id="revealed-wish"></p>
-                    <div id="invitation-details">
-                        <!-- Invitation content is injected by JavaScript -->
+        <!-- Reveal Invitation Screen -->
+        <section id="reveal-container" class="container">
+            <div class="invitation-wrapper">
+                <div class="invitation-layout">
+                    <div class="invitation-image-section">
+                        <div class="image-frame">
+                            <img id="revealed-image" src="" alt="Thiệp mời tốt nghiệp của Thiên Hương" loading="lazy"/>
+                            <div class="image-overlay"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="invitation-content-section">
+                        <div class="thank-you-message">
+                            <p id="revealed-wish"></p>
+                        </div>
+                        
+                        <div id="invitation-details" class="invitation-details">
+                            <!-- Content will be injected by JavaScript -->
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button id="reset-button" class="reset-btn">
+                                <span>Gửi lời nhắn khác</span>
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- <button id="reset-button" class="button">Gửi lời nhắn khác</button> -->
         </section>
     </main>
-    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></canvas>
+
+    <!-- Enhanced Confetti Canvas -->
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
     
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-icon">🎓</div>
+            <div class="loading-text">Đang chuẩn bị...</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script type="importmap">
     {
       "imports": {
@@ -91,6 +213,6 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script type="module" src="./index.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
