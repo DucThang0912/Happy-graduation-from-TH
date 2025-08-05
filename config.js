@@ -7,7 +7,7 @@ const CONFIG = {
     // Google Sheets Integration
     googleSheets: {
         enabled: true, // Set to true after setup
-        url: 'https://script.google.com/macros/s/AKfycbxdWe_WVphxCsVJljKGJzxxO62-VzWTLjv9rv32t-pz4FgMwcXINVVtSM-0VGkeanOf/exec', // Your Google Apps Script web app URL
+        url: 'https://script.google.com/macros/s/AKfycbw76ojLzsIsrKrgB9weFSBpRED9oNrz--vXaeBBxsJxrCeP5Wft3b7pBxBL6pbX3Nlh/exec', // Your Google Apps Script web app URL
         spreadsheetId: '1WH2hPy8rttJ6wcC5PY9bqmJsyN3xp3BG9WNDoCzoAWA', // Your Google Sheet ID
         sheetName: 'Form Submissions'
     },
