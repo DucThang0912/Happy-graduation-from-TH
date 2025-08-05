@@ -59,6 +59,7 @@ class AppState {
         this.isLoading = false;
         this.threeScene = null;
         this.animations = new Map();
+        this.dataManager = null;
     }
 
     setScreen(screen) {
@@ -659,6 +660,21 @@ class FormManager {
         submitBtn.disabled = true;
 
         try {
+            // Submit data to tracking services
+            if (this.state.dataManager) {
+                const submissionResult = await this.state.dataManager.submitFormData({
+                    name: sanitizedName,
+                    userType: userTypeValue
+                });
+                
+                console.log('Form submission result:', submissionResult);
+                
+                // Show success message if Google Sheets submission failed but localStorage succeeded
+                if (!submissionResult.results.googleSheets && submissionResult.results.localStorage) {
+                    console.log('Data saved locally, will sync when online');
+                }
+            }
+
             await new Promise(resolve => setTimeout(resolve, 800)); // Simulate processing
             this.transitionToGiftScreen();
         } catch (error) {
@@ -890,9 +906,7 @@ class GiftManager {
             `;
         } else {
             return `
-                <div class="qr-message ${className}">
-                    <p>Sinh viên trường thì ko cần mã QR 🎓</p>
-                </div>
+
             `;
         }
     }
@@ -909,6 +923,7 @@ class GraduationApp {
         this.animationManager = null;
         this.formManager = null;
         this.giftManager = null;
+        this.dataManager = null;
     }
 
     async init() {
@@ -933,6 +948,13 @@ class GraduationApp {
 
             this.formManager = new FormManager(this.elements, this.state, this.animationManager);
             this.giftManager = new GiftManager(this.elements, this.state, this.animationManager, this.confettiManager);
+
+            // Initialize Data Manager
+            this.dataManager = new DataManager();
+            this.state.dataManager = this.dataManager;
+            
+            // Configure Google Sheets URL (you'll need to set this after deployment)
+            // this.dataManager.setGoogleSheetsUrl('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE');
 
             // Setup reset functionality
             this.setupResetButton();
