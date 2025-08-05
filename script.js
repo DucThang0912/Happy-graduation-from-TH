@@ -30,6 +30,15 @@ const CONFIG = {
         spread: 160,
         decay: 0.9,
         gravity: 0.8
+    },
+    ui: {
+        showSuccessMessage: true,
+        showErrorMessage: true,
+        loadingDuration: 300, // Giảm từ 800ms xuống 300ms
+        animations: {
+            enabled: true,
+            duration: 300
+        }
     }
 };
 
@@ -660,23 +669,30 @@ class FormManager {
         submitBtn.disabled = true;
 
         try {
-            // Submit data to tracking services
+            // Start data submission in background (non-blocking)
+            let submissionPromise = Promise.resolve();
             if (this.state.dataManager) {
-                const submissionResult = await this.state.dataManager.submitFormData({
+                submissionPromise = this.state.dataManager.submitFormData({
                     name: sanitizedName,
                     userType: userTypeValue
+                }).catch(error => {
+                    console.error('Background submission error:', error);
+                    // Don't block UI for submission errors
                 });
-                
-                console.log('Form submission result:', submissionResult);
-                
-                // Show success message if Google Sheets submission failed but localStorage succeeded
-                if (!submissionResult.results.googleSheets && submissionResult.results.localStorage) {
-                    console.log('Data saved locally, will sync when online');
-                }
             }
 
-            await new Promise(resolve => setTimeout(resolve, 800)); // Simulate processing
+            // Show immediate feedback and transition
+            const loadingDuration = CONFIG.ui.loadingDuration || 300;
+            await new Promise(resolve => setTimeout(resolve, loadingDuration));
+            
+            // Transition to gift screen immediately
             this.transitionToGiftScreen();
+            
+            // Log submission result in background
+            submissionPromise.then(result => {
+                console.log('Form submission result:', result);
+            });
+            
         } catch (error) {
             console.error('Form submission error:', error);
             this.showError('Có lỗi xảy ra, vui lòng thử lại');

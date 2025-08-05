@@ -72,20 +72,26 @@ class DataManager {
         };
 
         try {
-            // Try Google Sheets first
-            if (this.googleSheetsUrl && this.isOnline) {
-                results.googleSheets = await this.submitToGoogleSheets(submissionData);
-            }
-
-            // Always save to localStorage as backup
+            // Save to localStorage immediately (fast)
             results.localStorage = this.saveToLocalStorage(submissionData);
 
-            // Send analytics data
+            // Send analytics immediately (fast)
             results.analytics = this.sendAnalytics(submissionData);
 
-            // If Google Sheets failed, add to pending queue
-            if (!results.googleSheets && this.googleSheetsUrl) {
-                this.addToPendingSubmissions(submissionData);
+            // Try Google Sheets in background (can be slow)
+            if (this.googleSheetsUrl && this.isOnline) {
+                // Use Promise.race to timeout after 2 seconds
+                const sheetsPromise = this.submitToGoogleSheets(submissionData);
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout')), 2000)
+                );
+                
+                try {
+                    results.googleSheets = await Promise.race([sheetsPromise, timeoutPromise]);
+                } catch (error) {
+                    console.log('Google Sheets submission timed out or failed, using localStorage only');
+                    this.addToPendingSubmissions(submissionData);
+                }
             }
 
             return {
@@ -120,25 +126,48 @@ class DataManager {
             throw new Error('Google Sheets URL not configured');
         }
 
+        // Add timeout to prevent long waits
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+
         try {
             const response = await fetch(this.googleSheetsUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                mode: 'no-cors',
+                signal: controller.signal
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            return result.success;
+            clearTimeout(timeoutId);
+            console.log('Data sent to Google Sheets (no-cors mode)');
+            return true;
 
         } catch (error) {
+            clearTimeout(timeoutId);
             console.error('Google Sheets submission error:', error);
-            throw error;
+            
+            // Try alternative method using form data
+            try {
+                const formData = new FormData();
+                formData.append('data', JSON.stringify(data));
+                
+                const response = await fetch(this.googleSheetsUrl, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                
+                console.log('Data sent to Google Sheets (form data method)');
+                return true;
+                
+            } catch (formError) {
+                console.error('Form data submission also failed:', formError);
+                throw error;
+            }
         }
     }
 
