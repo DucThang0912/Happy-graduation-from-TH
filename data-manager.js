@@ -89,7 +89,11 @@ class DataManager {
                 try {
                     results.googleSheets = await Promise.race([sheetsPromise, timeoutPromise]);
                 } catch (error) {
-                    console.log('Google Sheets submission timed out or failed, using localStorage only');
+                    if (error.name === 'AbortError') {
+                        console.warn('Google Sheets submission likely succeeded, but response is unavailable due to no-cors.');
+                    } else {
+                        console.log('Google Sheets submission timed out or failed, using localStorage only');
+                    }
                     this.addToPendingSubmissions(submissionData);
                 }
             }
